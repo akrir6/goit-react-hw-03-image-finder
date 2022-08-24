@@ -90,8 +90,7 @@ export class App extends Component {
     return (      
       <Container>
         <Searchbar onSubmit={this.searchQueryHandler} />
-        {!isEmpty &&
-          <ImageGallery>
+        {!isEmpty && <ImageGallery>
             <ImageGalleryItem images={images} onClick={this.openModalHandler} />
           </ImageGallery>
         }
@@ -101,12 +100,11 @@ export class App extends Component {
               Load more
           </Button>
         }
-        {isEmpty &&
-          <BadRequest>
+        {isEmpty && <BadRequest>
             Sorry, there are no images matching your search query. Please try again.
           </BadRequest>
         }
-        {showModal &&
+        {showModal && 
           <ModalWindow modalImageSrc={modalImageSrc} onClickOverlay={this.closeModalHandler} />
         }
       </Container>
