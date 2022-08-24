@@ -22,9 +22,11 @@ export class App extends Component {
 
   componentDidUpdate(_, prevState) {
     const { query, page } = this.state;
-    
+     console.log(prevState.page,this.state.page);
     if (prevState.query !== query || prevState.page !== page) {
+     
       this.reciveImagesData();
+      
     }
 
     if (page !== 1) {
@@ -52,6 +54,7 @@ export class App extends Component {
       isLoading: false,
       isEmpty: !totalHits,
     })
+    
   }
     
   searchQueryHandler = (e) => {
@@ -69,7 +72,7 @@ export class App extends Component {
   
   loadMoreHandler = () => {
     this.setState(prevState => ({
-      page: prevState.page += 1
+      page: prevState.page + 1,
     }));
   }
   

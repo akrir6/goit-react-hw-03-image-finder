@@ -23,7 +23,6 @@ export async function pixabayGetImages(searchQuery, searchPage) {
       webformatURL,
       largeImageURL,
     }));
-
     return { imagesData, totalHits };
   } catch (err) {
     console.log(err);
