@@ -1,5 +1,5 @@
 import { Component } from "react";
-import { pixabayGetImages } from "services/pixabayAPI";
+import { pixabayGetImages } from "./../services/pixabayAPI";
 import { Container } from "./App.styled";
 import { Loader } from "./Loader/Loader"; 
 import { Button } from "./Button/Button";

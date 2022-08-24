@@ -10,5 +10,5 @@ export const ImageGallery = ({ children }) => {
 }
 
 ImageGallery.propTypes = {
-    children: PropTypes.any.isRequired,
+    children: PropTypes.element.isRequired,
 }
