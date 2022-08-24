@@ -1,63 +1,101 @@
-import { fetchImages } from "services/pixabayAPI";
-import { Container } from "./App.styled";
 import { Component } from "react";
+import { pixabayGetImages } from "services/pixabayAPI";
+import { Container } from "./App.styled";
 import { Loader } from "./Loader/Loader"; 
-
 import { Button } from "./Button/Button";
 import { ImageGallery } from "./ImageGallery/ImageGallery";
 import { ImageGalleryItem } from "./ImageGalleryItem/ImageGalleryItem";
 import { Searchbar } from "./Searchbar/Searchbar";
 import { BadRequest } from "./BadRequest/BadRequest";
+import { ModalWindow } from "./Modal/Modal";
 export class App extends Component {
   state = {
     images: [],
     page: 1,
     query: '',
+    modalImageSrc:'',
+    showModal: false,
     isLoading: false,
-    totalHits:0,
-  }
+    isNotLastPage: false,
+    isEmpty:false,
+   }
 
   componentDidUpdate(_, prevState) {
-   if (prevState.query!==this.state.query || prevState.page!==this.state.page) this.getImages();
+    const { query, page } = this.state;
+    
+    if (prevState.query !== query || prevState.page !== page) this.reciveImagesData();
+
+    if (page !== 1) document.body.scrollIntoView({
+      behavior: "smooth", block: "end"
+    });
+    
   }
 
-  async getImages() {
-  this.setState({isLoading:true})
-    const { imagesData, totalHits } = await fetchImages(this.state.query, this.state.page);
-    if (totalHits) {
-      this.setState(prevState => ({ images: [...prevState.images, ...imagesData]}));
-      
-    }
-  this.setState({totalHits, isLoading:false})
+  async reciveImagesData() {
+    const { images, query, page } = this.state;
+    
+    this.setState({ isLoading: true });
+    const { imagesData, totalHits } = await pixabayGetImages(query, page);
+
+    if (totalHits) this.setState(prevState => ({
+      images: [...prevState.images, ...imagesData]
+    }));
+  
+    this.setState({
+      isNotLastPage: images.length+imagesData.length < totalHits,
+      isLoading: false,
+      isEmpty: !totalHits,
+    })
   }
     
   searchQueryHandler = (e) => {
     e.preventDefault();
     const query = e.target.elements.searchInput.value.trim();
-    if (query) this.setState({ images:[], page:1, query, });
+    
+    if (query) this.setState({
+      images: [],
+      page: 1,
+      query,
+    });
    } 
   
   loadMoreHandler = () => {
-    this.setState(prevState => ({ page: prevState.page+=1 }));
+    this.setState(prevState => ({
+      page: prevState.page += 1
+    }));
   }
   
+  openModalHandler = (largeImageURL) => {
+    this.setState({
+      modalImageSrc: largeImageURL,
+      showModal: true,
+    })
+  }
+
+  closeModalHandler = () => {
+    this.setState({showModal: false})
+  }
+
   render() {
+    const { images, isLoading, isNotLastPage, isEmpty, showModal, modalImageSrc } = this.state;
     
-    return (
-      
+    return (      
       <Container>
         <Searchbar onSubmit={this.searchQueryHandler} />
-        <ImageGallery>
-          <ImageGalleryItem images={this.state.images} />
-        </ImageGallery>
-        <Loader visible={this.state.isLoading} />
-        {!this.state.isLoading && this.state.images.length<this.state.totalHits &&
-          <Button Button onClick={this.loadMoreHandler}>
-        Load more
-      </Button> }
-        {this.state.query && !this.state.totalHits && <BadRequest>
-          Sorry, there are no images matching your search query. Please try again.
-        </BadRequest>}
+        {!isEmpty && <ImageGallery>
+          <ImageGalleryItem images={images} onClick={this.openModalHandler} />
+        </ImageGallery>}
+        {isLoading
+          ? <Loader />
+          : isNotLastPage && <Button onClick={this.loadMoreHandler}>
+              Load more
+          </Button>
+        }
+        {isEmpty && <BadRequest>
+            Sorry, there are no images matching your search query. Please try again.
+          </BadRequest>
+        }
+        {showModal && <ModalWindow modalImageSrc={modalImageSrc} onClickOverlay={this.closeModalHandler } />}
       </Container>
          
     )

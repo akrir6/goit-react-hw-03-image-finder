@@ -9,5 +9,5 @@ export const Button = ({onClick, children}) => {
 
 Button.propTypes = {
     onClick: PropTypes.func.isRequired,
-    children: PropTypes.any
+    children: PropTypes.string
 }

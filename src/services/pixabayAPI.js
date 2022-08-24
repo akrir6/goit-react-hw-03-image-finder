@@ -2,7 +2,7 @@ import axios from 'axios';
 const APIKEY = '28401377-e234095eda63cbe54e5a64269';
 axios.defaults.baseURL = 'https://pixabay.com/api/';
 
-export async function fetchImages(searchQuery, searchPage) {
+export async function pixabayGetImages(searchQuery, searchPage) {
   const params = new URLSearchParams({
     key: APIKEY,
     q: searchQuery,
@@ -17,11 +17,13 @@ export async function fetchImages(searchQuery, searchPage) {
     const {
       data: { hits, totalHits },
     } = await axios.get(`?${params}`);
+
     const imagesData = hits.map(({ id, webformatURL, largeImageURL }) => ({
       id,
       webformatURL,
       largeImageURL,
     }));
+
     return { imagesData, totalHits };
   } catch (err) {
     console.log(err);

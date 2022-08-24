@@ -1,7 +1,7 @@
- import PropTypes from 'prop-types'
+
 import { Grid } from 'react-loader-spinner';
 
-export const Loader = ({visible}) => {
+export const Loader = () => {
     return (
         <Grid
             height="100"
@@ -9,13 +9,10 @@ export const Loader = ({visible}) => {
             color="#3f51b5"
             ariaLabel="grid-loading"
             radius="12"
-            visible={visible}
+            visible={true}
             wrapperStyle={{ justifyContent: 'center' }}
         />
     ) 
 }
 
-Loader.propTypes = {
-    visible:PropTypes.bool.isRequired,
-}
 

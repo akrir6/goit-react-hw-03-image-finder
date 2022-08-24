@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types'
 import { ImageGalleryStyled } from "./ImageGallery.styled"
 
 export const ImageGallery = ({ children }) => {
@@ -6,4 +7,8 @@ export const ImageGallery = ({ children }) => {
             {children}
         </ImageGalleryStyled>
     )
+}
+
+ImageGallery.propTypes = {
+    children: PropTypes.element.isRequired,
 }
