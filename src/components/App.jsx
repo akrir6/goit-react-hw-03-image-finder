@@ -23,11 +23,15 @@ export class App extends Component {
   componentDidUpdate(_, prevState) {
     const { query, page } = this.state;
     
-    if (prevState.query !== query || prevState.page !== page) this.reciveImagesData();
+    if (prevState.query !== query || prevState.page !== page) {
+      this.reciveImagesData();
+    }
 
-    if (page !== 1) document.body.scrollIntoView({
-      behavior: "smooth", block: "end"
-    });
+    if (page !== 1) {
+      document.body.scrollIntoView({
+        behavior: "smooth", block: "end"
+      });
+    }
     
   }
 
@@ -37,9 +41,11 @@ export class App extends Component {
     this.setState({ isLoading: true });
     const { imagesData, totalHits } = await pixabayGetImages(query, page);
 
-    if (totalHits) this.setState(prevState => ({
-      images: [...prevState.images, ...imagesData]
-    }));
+    if (totalHits) {
+      this.setState(prevState => ({
+        images: [...prevState.images, ...imagesData]
+      }));
+    }
   
     this.setState({
       isNotLastPage: images.length+imagesData.length < totalHits,
@@ -52,12 +58,14 @@ export class App extends Component {
     e.preventDefault();
     const query = e.target.elements.searchInput.value.trim();
     
-    if (query) this.setState({
-      images: [],
-      page: 1,
-      query,
-    });
-   } 
+    if (query) {
+      this.setState({
+        images: [],
+        page: 1,
+        query,
+      });
+    }
+  }
   
   loadMoreHandler = () => {
     this.setState(prevState => ({
@@ -82,20 +90,25 @@ export class App extends Component {
     return (      
       <Container>
         <Searchbar onSubmit={this.searchQueryHandler} />
-        {!isEmpty && <ImageGallery>
-          <ImageGalleryItem images={images} onClick={this.openModalHandler} />
-        </ImageGallery>}
+        {!isEmpty &&
+          <ImageGallery>
+            <ImageGalleryItem images={images} onClick={this.openModalHandler} />
+          </ImageGallery>
+        }
         {isLoading
           ? <Loader />
           : isNotLastPage && <Button onClick={this.loadMoreHandler}>
               Load more
           </Button>
         }
-        {isEmpty && <BadRequest>
+        {isEmpty &&
+          <BadRequest>
             Sorry, there are no images matching your search query. Please try again.
           </BadRequest>
         }
-        {showModal && <ModalWindow modalImageSrc={modalImageSrc} onClickOverlay={this.closeModalHandler } />}
+        {showModal &&
+          <ModalWindow modalImageSrc={modalImageSrc} onClickOverlay={this.closeModalHandler} />
+        }
       </Container>
          
     )
