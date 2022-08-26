@@ -4,7 +4,6 @@ import { Container } from "./App.styled";
 import { Loader } from "./Loader/Loader"; 
 import { Button } from "./Button/Button";
 import { ImageGallery } from "./ImageGallery/ImageGallery";
-import { ImageGalleryItem } from "./ImageGalleryItem/ImageGalleryItem";
 import { Searchbar } from "./Searchbar/Searchbar";
 import { BadRequest } from "./BadRequest/BadRequest";
 import { ModalWindow } from "./Modal/Modal";
@@ -57,10 +56,7 @@ export class App extends Component {
     
   }
     
-  searchQueryHandler = (e) => {
-    e.preventDefault();
-    const query = e.target.elements.searchInput.value.trim();
-    
+  searchQueryHandler = (query) => {
     if (query) {
       this.setState({
         images: [],
@@ -93,9 +89,8 @@ export class App extends Component {
     return (      
       <Container>
         <Searchbar onSubmit={this.searchQueryHandler} />
-        {!isEmpty && <ImageGallery>
-            <ImageGalleryItem images={images} onClick={this.openModalHandler} />
-          </ImageGallery>
+        {images.length>0 &&
+          <ImageGallery images={images} onClick={this.openModalHandler} />
         }
         {isLoading
           ? <Loader />

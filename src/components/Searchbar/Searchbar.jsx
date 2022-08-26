@@ -1,10 +1,16 @@
+import PropTypes from 'prop-types';
 import { MdOutlineImageSearch } from "react-icons/md";
 import { SearchbarStyled, SearchButton, SearchForm, SearchInput } from "./Searchbar.styled"
 
-export const Searchbar = ({onSubmit}) => {
+export const Searchbar = ({ onSubmit }) => {
+    const setQuery=(e)=> {
+        e.preventDefault();
+        onSubmit(e.target.elements.searchInput.value.trim())
+    }
+    
     return (
         <SearchbarStyled>
-            <SearchForm onSubmit={onSubmit}>
+            <SearchForm onSubmit={setQuery}>
                 <SearchButton type="submit">
                     <MdOutlineImageSearch size={24} />
                 </SearchButton>
@@ -19,4 +25,8 @@ export const Searchbar = ({onSubmit}) => {
             </SearchForm>
         </SearchbarStyled>
     )
+}
+
+Searchbar.propTypes = {
+    onSubmit: PropTypes.func.isRequired,
 }
